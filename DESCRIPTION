@@ -10,3 +10,4 @@ Description: The nvis package facilitates the visualization of nuclear data with
 Depends: ggplot2, ggcolpairs
 License: GPL-2
 LazyLoad: yes
+LazyData: true

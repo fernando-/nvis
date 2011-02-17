@@ -2,8 +2,6 @@
 # ALERT: load skyrme datasets here?
 library(ggplot2)
 library(ggcolpairs)
-data(skyrme_65)
-data(skyrme_189)
 
 nvis.keyword <- function(key)
 {
