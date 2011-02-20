@@ -1,8 +1,8 @@
 Package: nvis
 Type: Package
 Title: Combination of visualization functions for nuclear data using ggplot2 and ggcolpairs.
-Version: 0.1
-Date: 2011-2-16
+Version: 0.2.1
+Date: 2011-2-19
 Author: Fernando Fuentes <fuentes.f4@gmail.com>, 
 		George Ostrouchov <ostrouchovg@ornl.gov>
 Maintainer: Fernando Fuentes <fuentes.f4@gmail.com>
