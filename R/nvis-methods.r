@@ -1,8 +1,7 @@
 # Keyword function to match "string" description to proper object of analysis
-# ALERT: load skyrme datasets here?
-library(ggplot2)
-library(ggcolpairs)
-
+# 
+# Parameters:
+# key: string keyword to be deciphered
 nvis.keyword <- function(key)
 {
 	# x/y keywords
@@ -23,6 +22,10 @@ nvis.keyword <- function(key)
 }
 
 # Removes outliers from dataset
+# NOTE: Edit this function to modify what is considered as an outlier
+# 
+# Parameters:
+# dataset: skyrme dataset which will be analyzed and outliers will be removed
 nvis.rm_outliers <- function(dataset)
 {
 	#----------inm properties--------------
@@ -75,8 +78,13 @@ nvis.rm_outliers <- function(dataset)
 	return (dataset)
 }
 
-# Calculates pearson correlation between xvar and yvar in a dataset
+# Calculates Pearson correlation between xvar and yvar in a dataset
 # Returns a description string to be used in plot title.
+#
+# Parameters:
+# dataset: data set object containing xvar and yvar as string column names
+# xvar: x variable in string format
+# yvar: y variable in string format
 nvis.correlations <- function(dataset, xvar, yvar)
 {
 	for(i in 1:ncol(dataset))
@@ -91,8 +99,10 @@ nvis.correlations <- function(dataset, xvar, yvar)
 	cor_title
 }
 
-# Returns LaTeX style expresion of nvis variable for better understanding.
-# tempva should be an nvis related variable
+# Returns LaTeX style expresion of nvis variable for better display during plotting.
+# 
+# Parameters:
+# tempvar: nvis related variable in string format
 nvis.label_expression <- function (tempvar) 
 {	
 	expressvar <- tempvar

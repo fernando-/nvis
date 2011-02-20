@@ -1,4 +1,7 @@
 # nvis
+# -----
+# 
+# 
 # mplot : multiplot : simple grid of ggplots
 # x/y parameter recognizes: "inm", "surface", "volume" keywords
 # dataset parameter recognizes: "small", "large" keywords
@@ -21,19 +24,19 @@
 # xlist : variables on the horizontal axes in the form of a "string" list
 # ylist : variables on the vertical axes in the form of a "string" list
 # color : variable to color plots in string format, default is none
-# png : name of png file in string format. If "off", doesnt create file. Default: "nvis_mplot.png"
-# width : png file pixel dimension, default is 11400
-# height : png file pixel dimension, default is 3000
+# export : switch to generate export file: "off", "png", "pdf", "on" . filename: "nvis_mplot.pdf" or "nvis_mplot.png". default is "off"
+# width : file width dimension, png in pixels, pdf in inches. 
+# height : file height dimension, png in pixels, pdf in inches
 # res : png file resolution, default is 100
-# legend : controls legend visibility, default is "on"
 # mplot_width : tweak this value to modify plotting area layout width. Default 20
 # legend_width : tweak this value to modify legend layout width. Default 2
+# legend : controls legend visibility, default is "on"
 # ggdetails : additional layer include in the ggplot2 plots, default is geom_point, can be combined in a list for multiple layers
 # outliers : Action to remove outliers. Default is "rm" : remove outliers from dataset.
 # correlations : Switch to display pair pearson correlation on the title of each plot. Default: "off"
 # expressions : If "yes" it will change nvis x/y labels to their expressions, code also expresses if dataset keyword is used.
 nvis.mplot <- function(dataset, xlist, ylist, color = "", 
-	png="nvis_mplot.png", width = 5000, height = 1500, res = 100,
+	export="off", width = "default", height = "default", res = 100,
 	mplot_width = 20, legend_width = 2,
 	legend = "on",  ggdetails = "default", outliers="rm", correlations="off", expressions="no")
 {	
@@ -62,8 +65,35 @@ nvis.mplot <- function(dataset, xlist, ylist, color = "",
 	ypos <- 1
 	xpos <- 1
 	
-	if( png != "off")
-		png(png, width = width, height = height,  res = res)
+	exporting <- "false"
+	
+	if(export != "off")
+	{
+		if(export == "on" || export == "pdf")
+		{
+			filename <- "nvis_mplot.pdf"
+			
+			if(width == "default")
+				width <- 7
+			if(height == "default")
+				height <- 7
+			
+			pdf(filename, width = width, height = height)
+			exporting <- "true"
+		}
+		if(export == "png")
+		{
+			filename <- "nvis_mplot.png"
+			
+			if(width == "default")
+				width <- 5000
+			if(height == "default")
+				height <- 1500
+			
+			png(filename, width = width, height = height,  res = res)
+			exporting <- "true"
+		}
+	}
 	
 	grid.newpage()
 	#legend configuration
@@ -128,7 +158,7 @@ nvis.mplot <- function(dataset, xlist, ylist, color = "",
 	
 	popViewport()
 	
-	if( png != "off")
+	if(exporting == "true")
 		dev.off()
 }
 
@@ -143,12 +173,12 @@ nvis.mplot <- function(dataset, xlist, ylist, color = "",
 #
 # Parameters:
 # dataset : data set to be used, keywords: "small" = skyrme_65, "large" = skyrme_189
-# xvar : x axis variable in string format
-# yvar : y axis variable in string format
+# x : x axis variable in string format
+# y : y axis variable in string format
 # color : variable to color plots in string format, default is none
-# png : name of png file in string format. Default is "off", doesnt create file. If "on": "nvis_mplot.png"
-# width : png file pixel dimension, default is 1280
-# height : png file pixel dimension, default is 1024
+# export : switch to generate export file: "off", "png", "pdf", "on" . filename: "nvis_iplot.pdf" or "nvis_iplot.png". default is "off"
+# width : file width dimension, png in pixels, pdf in inches. 
+# height : file height dimension, png in pixels, pdf in inches
 # res : png file resolution, default is 200
 # legend : controls legend visibility, default is "on"
 # ggdetails : additional layer include in the ggplot2 plots, default is geom_point, can be combined in a list for multiple layers
@@ -156,7 +186,7 @@ nvis.mplot <- function(dataset, xlist, ylist, color = "",
 # correlations : Switch to display pair pearson correlation on the title of each plot. Default: "off"
 # expressions : If "yes" it will change nvis x/y labels to their expressions, code also expresses if dataset keyword is used.
 nvis.iplot <- function(dataset, x, y, color = "", 
-	png="off", width = 1280, height = 1024,  res = 150,
+	export="off", width = "default", height = "default",  res = 150,
 	legend = "on",  ggdetails = "default", outliers="rm", correlations="off", expressions="no")
 {	
 	if(dataset == "small" || dataset == "large")
@@ -167,11 +197,30 @@ nvis.iplot <- function(dataset, x, y, color = "",
 	if(outliers == "rm")
 		dataset <- nvis.rm_outliers(dataset)
 
-	if(png != "off")
+	if(export != "off")
 	{
-		if(png == "on")
-			png <- "nvis_iplot.png"
-		png(png, width = width, height = height,  res = res)
+		if(export == "on" || export == "pdf")
+		{
+			filename <- "nvis_iplot.pdf"
+			
+			if(width == "default")
+				width <- 7
+			if(height == "default")
+				height <- 7
+			
+			pdf(filename, width = width, height = height)
+		}
+		if(export == "png")
+		{
+			filename <- "nvis_iplot.png"
+			
+			if(width == "default")
+				width <- 1280
+			if(height == "default")
+				height <- 1024
+			
+			png(filename, width = width, height = height,  res = res)
+		}
 	}
 	
 	plot <- ggplot(data = dataset, aes_string(x = x, y = y))
@@ -205,7 +254,7 @@ nvis.iplot <- function(dataset, x, y, color = "",
 		plot <- plot + opts(axis.title.y=theme_text(angle=0))
 	}
 	
-	if(png != "off")
+	if(export != "off")
 	{
 		print(plot)
 		dev.off()
@@ -223,15 +272,16 @@ nvis.iplot <- function(dataset, x, y, color = "",
 # color : variable to color plots in string format, default is none
 # ggdetails : additional layer include in the ggplot2 plots, default is geom_point, can be combined in a list for multiple layers
 # margins : space surrounding the plots, default is lines based, 0.1 for top and right and -0.7 for bottom and left
-# png : name of png file in string format. If "off", doesnt create file. Default: "nvis_mplot.png"
-# width : png file pixel dimension, default is 11400
-# height : png file pixel dimension, default is 3000
-# res : png file resolution, default is 100
+# title: title of the resulting matrix plot
+# export : switch to generate export file: "off", "png", "pdf", "on" . filename: "nvis_ggcplot.pdf" or "nvis_ggcplot.png". default is "png"
+# width : file width dimension, png in pixels, pdf in inches. 
+# height : file height dimension, png in pixels, pdf in inches
+# res : png file resolution, default is 150
 # legend : controls legend visibility, default is "on"
 # outliers : Action to remove outliers. Default is "rm" : remove outliers from dataset.
 nvis.ggcplot <- function(dataset, xlist, ylist, color = "default",
 	ggdetails = "default", margins="default", title="",
-	png="on", width = 1280, height = 1024, res = 150,	
+	export="png", width = "default", height = "default", res = 150,	
 	legend = "on", outliers="rm")
 {
 	if(dataset == "small" || dataset == "large")
@@ -247,13 +297,39 @@ nvis.ggcplot <- function(dataset, xlist, ylist, color = "default",
 	plot <- ggcolpairs(dataset = dataset, xlist = xlist, ylist = ylist, colour = color, 
 				ggdetails = ggdetails, margins = margins, title = title, legend = legend)
 	
-	if(png != "off")
+	exporting <- "false"
+	
+	if(export != "off")
 	{
-		if(png == "on")
-			png <- "nvis_ggcplot.png"
-		png(png, width = width, height = height,  res = res)
-		print(plot)
-		dev.off()
+		if(export == "on" || export == "pdf")
+		{
+			filename <- "nvis_ggcplot.pdf"
+			
+			if(width == "default")
+				width <- 7
+			if(height == "default")
+				height <- 7
+			
+			pdf(filename, width = width, height = height)
+			exporting <- "true"
+		}
+		if(export == "png")
+		{
+			filename <- "nvis_ggcplot.png"
+			
+			if(width == "default")
+				width <- 1280
+			if(height == "default")
+				height <- 1024
+			
+			png(filename, width = width, height = height,  res = res)
+			exporting <- "true"
+		}
+		if(exporting == "true")
+		{
+			print(plot)
+			dev.off()
+		}
 	}
 	
 	plot
